@@ -1,0 +1,30 @@
+.piece{
+    width: var(--pieceWidth);
+    height: var(--pieceWidth);
+    text-align: center;
+    background-color: rgb(243, 153, 9);
+    border: 1px solid rgba(0,0,0,0.2);
+    cursor: pointer;
+}
+.piece.selected-item{
+    background-color: rgb(243, 153, 9);;
+    /* transition: all 1s linear; */
+    animation: faded-in 1s forwards linear;
+
+}
+
+.piece p{
+    font-size: 30px;
+    line-height: var(--pieceWidth);
+    color: #fff;
+    font-weight: bold;
+}
+@keyframes faded-in {
+    0%{
+        transform:  rotateY(0deg);
+        
+    }
+    100%{
+        transform:  rotateY(180deg);
+    }
+}
