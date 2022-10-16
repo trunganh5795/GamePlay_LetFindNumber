@@ -44,11 +44,11 @@ export default function Game() {
                     >Play Now !</button>
                     <p>You were required to find the number that the computer give you.
                         <br />
-                        If you can find out under 5s,you'll got 5 points,
+                        If you can find out under 5s, you'll got 5 points,
                         <br />
                         You'll get 2 points if you do that between 5s and 10s
                         <br />
-                        Otherwise you just got 1 point if you done
+                        Otherwise you just get 1 point if you done
                     </p>
                 </div>
             }
