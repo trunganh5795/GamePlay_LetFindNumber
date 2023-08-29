@@ -39,5 +39,134 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+
+ <button id="publish">Publish</button>
+    <button id="stop">Stop Publish</button>
+    <button id="auto">Auto publish</button>
+    <br />
+    <div id="data"></div>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/mqtt/4.3.7/mqtt.min.js"
+      integrity="sha512-tc5xpAPaQDl/Uxd7ZVbV66v94Lys0IefMJSdlABPuzyCv0IXmr9TkqEQvZiWKRoXMSlP5YPRwpq2a+v5q2uzMg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      const getRandomInt = (min, max) => {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      };
+    </script>
+    <script>
+      window.mqtt = mqtt;
+      const opts = {
+        username: 'egt_sub',
+        password: 'Lamgicopass1234',
+        // protocolVersion: 3,
+        connectTimeout: 40000,
+        // protocolId: 'MQIsdp',
+        // protocolVersion: 3,
+        // protocolId: 'MQIsdp',
+        // protocolVersion: 3,
+        // protocol: 'mqttv3.1',
+      };
+      try {
+        const client = mqtt.connect('ws://hongphat41.egt.vn:8083/mqtt', opts);
+        let myInterval = null;
+        const dataSection = document.getElementById('data');
+
+        client.on('connect', () => {
+          console.log('Connected');
+          client.subscribe('447', (err) => {
+            if (!err) {
+            }
+          });
+        });
+        client.on('message', (topic, msg, x) => {
+          console.log(topic, msg.toString());
+          console.log('======================');
+          dataSection.innerHTML += `<div>${msg.toString()}</div>`;
+          // client.subscribe('447', (err) => {
+          //   if (!err) {
+          //   }
+          // });
+        });
+
+        const publish = () => {
+          client.publish(
+            '447',
+            `{
+            "status": "deviceReceive",
+            "deviceInfo": "34664a6a006e6642",
+            "message": {
+              "enablePubMqtt": "true"
+            }
+          }`
+          );
+        };
+
+        const stopPublish = () => {
+          client.publish(
+            '447',
+            `{
+            "status": "deviceReceive",
+            "deviceInfo": "34664a6a006e6642",
+            "message": {
+              "enablePubMqtt": "false"
+            }
+          }`
+          );
+        };
+
+        const autoPublish = () => {
+          if (myInterval) {
+            clearInterval(myInterval);
+            myInterval = null;
+            return;
+          }
+          console.log('start publish');
+          myInterval = setInterval(() => {
+            const data = {
+              status: 'appReceive',
+              deviceInfo: '34664a6a006e6642',
+              message: {
+                status: '1',
+                statusDetail: '3',
+                nhietDo: getRandomInt(0, 100),
+                minCount: getRandomInt(20, 60),
+                secCount: '0',
+                program: '01',
+                tempSet: getRandomInt(50, 120),
+                sterTimeSet: '60.0',
+                dryTimeSet: '10',
+              },
+            };
+
+            client.publish('447', JSON.stringify(data));
+          }, 2000);
+        };
+
+        const publishBtn = document.getElementById('publish');
+        const stopPublishBtn = document.getElementById('stop');
+        const autoPublishBtn = document.getElementById('auto');
+
+        publishBtn.addEventListener('click', () => {
+          console.log('Public');
+          publish();
+        });
+
+        stopPublishBtn.addEventListener('click', () => {
+          console.log('stopPublish');
+          stopPublish();
+        });
+
+        autoPublishBtn.addEventListener('click', () => {
+          autoPublish();
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    </script>
+
+    
   </body>
 </html>
